@@ -19,12 +19,20 @@
         <!-- BEGIN: add trackers here -->
         <!-- It is advised to load only the markers you are interested in broadcasting -->
         <xacro:ndi_tracker 
-            name="tracker_1"
-            srom="$(find ndi_description)/sroms/8700339.rom" 
+            name="base_tracker"
+            srom="$(find ndi_description)/sroms/marker_2_pla.rom" 
         />
         <xacro:ndi_tracker 
-            name="tracker_2"
-            srom="$(find ndi_description)/sroms/8700340.rom" 
+            name="carriage_tracker"
+            srom="$(find ndi_description)/sroms/marker_chariot.rom" 
+        />
+        <xacro:ndi_tracker 
+            name="pen_tracker"
+            srom="$(find ndi_description)/sroms/8700340_tip_16_06_2026.rom" 
+        />
+        <xacro:ndi_tracker
+            name="effector_tracker"
+            srom="$(find ndi_description)/sroms/marker_effector_oriented_urdf.rom" 
         />
         <!-- END: add trackers here -->
 

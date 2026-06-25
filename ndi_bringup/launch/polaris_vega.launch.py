@@ -47,14 +47,18 @@ def generate_launch_description():
     pose_broadcasters = [
         "tracker_1_pose_broadcaster",
         "tracker_2_pose_broadcaster",
+        "tracker_3_pose_broadcaster",
+        "tracker_4_pose_broadcaster"
     ]
 
     # we can remap the default topic names to something more user friendly 
     # by adding the remappings here
     # the default topic name for pose is: <pose broadcaster name>/pose
     topic_remappings = [
-        ('tracker_1_pose_broadcaster/pose', 'tracker_1_pose'),
-        ('tracker_2_pose_broadcaster/pose', 'tracker_2_pose'),
+        ('tracker_1_pose_broadcaster/pose', 'base_tracker_pose'),
+        ('tracker_2_pose_broadcaster/pose', 'carriage_tracker_pose'),
+        ('tracker_3_pose_broadcaster/pose', 'pen_tracker_pose'),
+        ('tracker_4_pose_broadcaster/pose', 'effector_tracker_pose'),
     ]
 
     ip = LaunchConfiguration('ip')
