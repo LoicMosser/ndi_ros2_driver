@@ -32,7 +32,7 @@
         />
         <xacro:ndi_tracker
             name="effector_tracker"
-            srom="$(find ndi_description)/sroms/marker_effector_oriented_urdf.rom" 
+            srom="$(find ndi_description)/sroms/marker_bioprinting_translated.rom" 
         />
         <!-- END: add trackers here -->
 
