@@ -29,14 +29,21 @@ from launch_ros.substitutions import FindPackageShare
 
 # by adding ['--controller-manager', '/ndi/controller_manager'] to the arguments
 # the controller spawner will use the controller manager in the ndi namespace
-def controller_spawner(name, *args):
+def controller_spawner(name, controllers_config, remappings, *args):
+    # liste de substitutions : les objets sont résolus par launch
+    ros_args = ['--params-file ', controllers_config]
+    for src, dst in remappings:
+        ros_args += [f' --remap {src}:={dst}']
+
     return Node(
         package="controller_manager",
         executable="spawner",
         output="screen",
-        arguments=[name] + [a for a in args] + ['--controller-manager',
-                                                '/ndi/controller_manager'],
-        namespace='ndi', # run the controller spawner in the ndi namespace
+        namespace='ndi',
+        arguments=[name] +
+                  [a for a in args] +
+                  ['--controller-manager', '/ndi/controller_manager',
+                   '--controller-ros-args', ros_args],
     )
 
 
@@ -103,10 +110,10 @@ def generate_launch_description():
     node_controller_manager = Node(
         package='controller_manager',
         executable='ros2_control_node',
-        namespace='ndi', # run the controller manager in the ndi namespace
+        namespace='ndi',
         parameters=[ParameterFile(controllers_config, allow_substs=True)],
         output='screen',
-        remappings=topic_remappings, # remap the default topic names
+        # remappings supprimés : transmis via le spawner désormais
     )
 
     node_rviz = Node(
@@ -118,7 +125,12 @@ def generate_launch_description():
     )
 
     pose_broadcasters_spawners = [
-        controller_spawner(pose_broadcaster) for pose_broadcaster in pose_broadcasters
+        controller_spawner(
+            pose_broadcaster,
+            controllers_config,
+            topic_remappings,
+        )
+        for pose_broadcaster in pose_broadcasters
     ]
 
     nodes_to_start = [

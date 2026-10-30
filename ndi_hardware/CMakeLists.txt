@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.10)
 project(ndi_hardware)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -11,7 +11,7 @@ find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_lifecycle REQUIRED)
-find_package(OpenSSL REQUIRED)  # Add this line to find OpenSSL
+find_package(OpenSSL REQUIRED)
 
 # Include directories
 include_directories(
@@ -35,18 +35,16 @@ add_library(
   ${NDI_HARDWARE_SOURCES}
 )
 
-# Add preprocessor definition for OpenSSL
-target_compile_definitions(${PROJECT_NAME} PRIVATE OPENSSL)
-
-# Link libraries
 target_link_libraries(${PROJECT_NAME} ndi_capi OpenSSL::SSL OpenSSL::Crypto)
 
-ament_target_dependencies(
-  ${PROJECT_NAME}
-  hardware_interface
-  pluginlib
-  rclcpp
-  rclcpp_lifecycle
+target_link_libraries(${PROJECT_NAME}
+  ndi_capi
+  OpenSSL::SSL
+  OpenSSL::Crypto
+  hardware_interface::hardware_interface
+  pluginlib::pluginlib
+  rclcpp::rclcpp
+  rclcpp_lifecycle::rclcpp_lifecycle
 )
 
 pluginlib_export_plugin_description_file(hardware_interface ndi_hardware_interface_plugin.xml)

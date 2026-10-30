@@ -39,15 +39,19 @@ class CoutRedirect {
     std::ofstream null_stream;
 };
 
-hardware_interface::CallbackReturn NdiTrackerHardwareInterface::on_init(
-    const hardware_interface::HardwareInfo &info) {
-
+hardware_interface::CallbackReturn
+NdiTrackerHardwareInterface::on_init(
+  const hardware_interface::HardwareComponentInterfaceParams & params)
+{
     CoutRedirect redirect; // Redirect std::cout to /dev/null
 
-    if (hardware_interface::SensorInterface::on_init(info) !=
-        CallbackReturn::SUCCESS) {
-        return CallbackReturn::ERROR;
+    if (hardware_interface::SensorInterface::on_init(params) !=
+        hardware_interface::CallbackReturn::SUCCESS)
+    {
+        return hardware_interface::CallbackReturn::ERROR;
     }
+
+    const auto & info = params.hardware_info;
 
     RCLCPP_INFO(get_logger(), "Initializing ...");
 

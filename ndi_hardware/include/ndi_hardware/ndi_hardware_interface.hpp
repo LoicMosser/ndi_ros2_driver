@@ -23,6 +23,7 @@
 #include "hardware_interface/hardware_info.hpp"
 #include "hardware_interface/sensor_interface.hpp"
 #include "hardware_interface/types/hardware_interface_return_values.hpp"
+#include "hardware_interface/hardware_component_interface.hpp" 
 #include "rclcpp/macros.hpp"
 
 // From NDI_CAPI_v1.9.7
@@ -44,7 +45,7 @@ class NdiTrackerHardwareInterface : public hardware_interface::SensorInterface {
     RCLCPP_SHARED_PTR_DEFINITIONS(NdiTrackerHardwareInterface)
 
     hardware_interface::CallbackReturn
-    on_init(const hardware_interface::HardwareInfo &info) override;
+    on_init(const hardware_interface::HardwareComponentInterfaceParams & params) override;
 
     hardware_interface::CallbackReturn
     on_configure(const rclcpp_lifecycle::State &previous_state) override;
