@@ -46,19 +46,13 @@ def generate_launch_description():
     # we configured in the controllers.yaml file here
     pose_broadcasters = [
         "tracker_1_pose_broadcaster",
-        "tracker_2_pose_broadcaster",
-        "tracker_3_pose_broadcaster",
-        "tracker_4_pose_broadcaster"
     ]
 
     # we can remap the default topic names to something more user friendly 
     # by adding the remappings here
     # the default topic name for pose is: <pose broadcaster name>/pose
     topic_remappings = [
-        ('tracker_1_pose_broadcaster/pose', 'base_tracker_pose'),
-        ('tracker_2_pose_broadcaster/pose', 'carriage_tracker_pose'),
-        ('tracker_3_pose_broadcaster/pose', 'pen_tracker_pose'),
-        ('tracker_4_pose_broadcaster/pose', 'effector_tracker_pose'),
+        ('tracker_1_pose_broadcaster/pose', 'tracker_1_pose'),
     ]
 
     ip = LaunchConfiguration('ip')
@@ -72,7 +66,7 @@ def generate_launch_description():
                 [
                     FindPackageShare('ndi_bringup'),
                     'urdf',
-                    'polaris_vega_setup.urdf.xacro',
+                    'ndi_sensor_setup.urdf.xacro',
                 ]
             ),
             ' ip:=', ip,
@@ -86,7 +80,7 @@ def generate_launch_description():
         [
             FindPackageShare('ndi_bringup'),
             'rviz',
-            'polaris_vega.rviz',
+            'ndi_sensor.rviz',
         ]
     )
 
@@ -94,7 +88,7 @@ def generate_launch_description():
         [
             FindPackageShare('ndi_bringup'),
             'config',
-            'polaris_vega_controllers.yaml',
+            'ndi_sensor_controllers.yaml',
         ]
     )
 

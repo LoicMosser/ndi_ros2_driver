@@ -2,21 +2,12 @@
 # - by the prefix "ndi/", we spawn the controller manager under namespace "ndi"
 ndi/controller_manager:
   ros__parameters:
-    update_rate: 20 # Hz
+    update_rate: 25 # Hz
 
     # BEGIN: add broadcaster for each tracker here
     # - broadcaster name should be distinct
     # - we should not add the prefix "ndi/" here as we have already done this for the controller manager
     tracker_1_pose_broadcaster:
-      type: pose_broadcaster/PoseBroadcaster
-
-    tracker_2_pose_broadcaster:
-      type: pose_broadcaster/PoseBroadcaster
-
-    tracker_3_pose_broadcaster:
-      type: pose_broadcaster/PoseBroadcaster
-
-    tracker_4_pose_broadcaster:
       type: pose_broadcaster/PoseBroadcaster
 
     # END: add broadcaster for each tracker here
@@ -27,22 +18,7 @@ ndi/controller_manager:
 # - by the prefix "ndi/", we spawn the controllers under namespace "ndi"
 ndi/tracker_1_pose_broadcaster:
   ros__parameters:
-    pose_name: "base_tracker"
-    frame_id: "polaris_vega_base"
-
-ndi/tracker_2_pose_broadcaster:
-  ros__parameters:
-    pose_name: "carriage_tracker"
-    frame_id: "polaris_vega_base"
-
-ndi/tracker_3_pose_broadcaster:
-  ros__parameters:
-    pose_name: "pen_tracker"
-    frame_id: "polaris_vega_base"
-
-ndi/tracker_4_pose_broadcaster:
-  ros__parameters:
-    pose_name: "effector_tracker"
-    frame_id: "polaris_vega_base"
+    pose_name: "tracker_1"
+    frame_id: "ndi_base"
 
 # END: configure broadcaster for each tracker here

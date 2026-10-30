@@ -8,9 +8,9 @@
     <!-- single link represents the base of the polaris vega optical tracking system -->
     <!-- it cannot be negelected as robot state broadcaster requires at least one "root" link in urdf -->
     <!-- it will be used as the reference frame in tracker pose broadcasting -->
-    <link name="polaris_vega_base"/>
+    <link name="ndi_base"/>
 
-    <ros2_control name="polaris_vega" type="sensor">        
+    <ros2_control name="ndi_sensor" type="sensor">        
         <hardware>
             <plugin>ndi_hardware/NdiTrackerHardwareInterface</plugin>
             <param name="ip">$(arg ip)</param>
@@ -19,20 +19,8 @@
         <!-- BEGIN: add trackers here -->
         <!-- It is advised to load only the markers you are interested in broadcasting -->
         <xacro:ndi_tracker 
-            name="base_tracker"
-            srom="$(find ndi_description)/sroms/marker_2_pla.rom" 
-        />
-        <xacro:ndi_tracker 
-            name="carriage_tracker"
-            srom="$(find ndi_description)/sroms/marker_chariot.rom" 
-        />
-        <xacro:ndi_tracker 
-            name="pen_tracker"
-            srom="$(find ndi_description)/sroms/8700340_tip_16_06_2026.rom" 
-        />
-        <xacro:ndi_tracker
-            name="effector_tracker"
-            srom="$(find ndi_description)/sroms/marker_bioprinting_translated.rom" 
+            name="tracker_1"
+            srom="$(find ndi_description)/sroms/8700339.rom" 
         />
         <!-- END: add trackers here -->
 

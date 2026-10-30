@@ -157,14 +157,21 @@ hardware_interface::CallbackReturn NdiTrackerHardwareInterface::on_configure(
     RCLCPP_INFO(get_logger(), "Initializing NDI system ...");
     onErrorPrintDebugMessage("ndi_capi_.initialize()", ndi_capi_.initialize());
 
+    
+    
     // Load any passive tool definitions from .rom files
-    RCLCPP_INFO(get_logger(), "Loading NDI trackers from .rom files ...");
-    // Tools are loaded in the order they are defined in the robot description
-    for (auto &ndi_tracker : ndi_trackers_info_) {
-        loadTool(ndi_tracker.srom.c_str());
-        RCLCPP_INFO(get_logger(), "Loaded: %s(%s)", ndi_tracker.name.c_str(),
-                    ndi_tracker.srom.c_str());
+    if (ndi_ip_.substr(0,3).compare("COM") != 0 && ndi_ip_.substr(0,4).compare("/dev") != 0){
+        RCLCPP_INFO(get_logger(), "Loading NDI trackers from .rom files ...");
+        // Tools are loaded in the order they are defined in the robot description
+        for (auto &ndi_tracker : ndi_trackers_info_) {
+            loadTool(ndi_tracker.srom.c_str());
+            RCLCPP_INFO(get_logger(), "Loaded: %s(%s)", ndi_tracker.name.c_str(),
+                        ndi_tracker.srom.c_str());
+        }
     }
+    
+    RCLCPP_INFO(get_logger(), "Waiting for a second ...");
+    rclcpp::sleep_for(std::chrono::seconds(1));
 
     // Initialize and enable loaded tools
     ndi_enabled_tools_ = std::vector<ToolData>();
@@ -189,6 +196,19 @@ hardware_interface::CallbackReturn NdiTrackerHardwareInterface::on_configure(
 
 hardware_interface::CallbackReturn NdiTrackerHardwareInterface::on_cleanup(
     const rclcpp_lifecycle::State &previous_state) {
+
+    // Suppress unused variable warning
+    (void)previous_state;
+
+    // Stop tracking
+    RCLCPP_INFO(get_logger(), "Stopping tracking ...");
+    onErrorPrintDebugMessage("ndi_capi_.stopTracking()",
+                             ndi_capi_.stopTracking());
+    return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+hardware_interface::CallbackReturn NdiTrackerHardwareInterface::on_shutdown(
+    const rclcpp_lifecycle::State &previous_state){
 
     // Suppress unused variable warning
     (void)previous_state;
@@ -284,10 +304,11 @@ NdiTrackerHardwareInterface::read(const rclcpp::Time &time,
 
     // write enabled tools' pose in ros2 control state interfaces
     // for tools in ndi_enabled_tools_
-    for (const auto &tool : ndi_enabled_tools_) {
+    for (size_t i = 0; i < ndi_enabled_tools_.size(); i++) {
         // get sensor name
-        std::string sensor_name =
-            ndi_trackers_info_[tool.transform.toolHandle - 1].name;
+        const auto &tool = ndi_enabled_tools_[i];
+        std::string sensor_name = ndi_trackers_info_[i].name;
+
         if (tool.transform.isMissing()) {
             // if transform is missing set all values to NaN
             set_state(sensor_name + "/position.x",
